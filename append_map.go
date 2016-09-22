@@ -47,6 +47,12 @@ func AppendMap(p []byte, mapData map[string]interface{}, namePrefix ...string) [
 			}
 			p = AppendString(p, fmt.Sprintf("%f", x), name...)
 
+		case bool:
+			if 0 < i {
+				p = append(p, ' ')
+			}
+			p = AppendString(p, fmt.Sprintf("%t", x), name...)
+
 		case map[string]interface{}:
 			if 0 < i {
 				p = append(p, ' ')
