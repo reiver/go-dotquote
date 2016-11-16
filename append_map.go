@@ -58,6 +58,13 @@ func AppendMap(p []byte, mapData map[string]interface{}, namePrefix ...string) [
 				p = append(p, ' ')
 			}
 			p = AppendMap(p, x, name...)
+
+		case []string:
+			if 0 < i {
+				p = append(p, ' ')
+			}
+			p = AppendStrings(p, x, name...)
+
 		default:
 			// Nothing here.
 		}
