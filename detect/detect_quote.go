@@ -9,6 +9,17 @@ import (
 )
 
 
+// MustDetectQuote is like DetectQuote , but panic()s if there is an error.
+func MustDetectQuote(b []byte) (int, int) {
+	begin, end, err := DetectQuote(b)
+	if nil != err {
+		panic(err)
+	}
+
+	return begin, end
+}
+
+
 // DetectQuote looks for a dotquote quote in the dotquote data in a []byte, and returns
 // the beginning index and the ending index.
 //

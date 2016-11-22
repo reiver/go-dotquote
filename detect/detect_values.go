@@ -92,6 +92,17 @@ func (v *DetectValues) detect() bool {
 }
 
 
+// MustDetect is like Detect, but panic()s if there is an error.
+func (v *DetectValues) MustDetect() (int, int) {
+	begin, end, err := v.Detect()
+	if nil != err {
+		panic(err)
+	}
+
+	return begin, end
+}
+
+
 func (v *DetectValues) Detect() (int, int, error) {
 	if nil == v {
 		err := errNilReceiver

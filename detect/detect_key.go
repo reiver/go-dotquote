@@ -13,6 +13,17 @@ var (
 )
 
 
+// MustDetectKey is like DetectKey, but panic()s if there is an error.
+func MustDetectKey(b []byte) (int, int) {
+	begin, end, err := DetectKey(b)
+	if nil != err {
+		panic(err)
+	}
+
+	return begin, end
+}
+
+
 // DetectKey looks for a dotquote key in the dotquote data in a []byte, and returns
 // the beginning index and the ending index.
 //
