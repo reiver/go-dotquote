@@ -8,7 +8,7 @@ import (
 )
 
 
-// DetectValues for a dotquote values in the dotquote data in a []byte.
+// DetectValues looks for dotquote values in the dotquote data in a []byte.
 //
 // Example usage:
 //
