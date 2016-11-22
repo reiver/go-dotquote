@@ -45,7 +45,6 @@ func (v *DecoderValues) Next() bool {
 
 	values := v.decoder.values
 	if nil == values {
-		v.err = errInternalError
 		return false
 	}
 
