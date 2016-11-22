@@ -3,8 +3,11 @@ package dotquotedetect
 
 import (
 	"github.com/reiver/go-inquote"
+	"github.com/reiver/go-oi"
 
+	"bytes"
 	"io"
+	"io/ioutil"
 	"unicode/utf8"
 )
 
@@ -35,6 +38,12 @@ func MustDetectQuote(b []byte) (int, int) {
 //	
 //	quote := p[b:e]
 func DetectQuote(b []byte) (int, int, error) {
+	return DetectAndUnquoteQuote(ioutil.Discard, b)
+}
+
+// DetectAndUnquoteQuote is like DetectQuote, expect it also writes the quoted version of the quote
+// to the io.Writer.
+func DetectAndUnquoteQuote(w io.Writer, b []byte) (int, int, error) {
 	if nil == b {
 		return -1, -1, errNilBytes
 	}
@@ -75,12 +84,26 @@ func DetectQuote(b []byte) (int, int, error) {
 			break
 		}
 
-		_, n, err := inquote.DecodeRune(p)
+		r, n, err := inquote.DecodeRune(p)
 		if nil != err {
 			if io.EOF == err {
 				break
 			}
 			return -1, -1, err
+		}
+
+		{
+			var buffer bytes.Buffer
+
+			_, err := buffer.WriteRune(r)
+			if nil != err {
+				return -1, -1, err
+			}
+
+			_, err = oi.LongWrite(w, buffer.Bytes())
+			if nil != err {
+				return -1, -1, err
+			}
 		}
 
 
