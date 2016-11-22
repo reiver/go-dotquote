@@ -20,6 +20,7 @@ type DecoderValues struct {
 
 	valueBegin int
 	valueEnd   int
+	valueUnquoted string
 }
 
 func (v DecoderValues) Err() error {
@@ -54,8 +55,9 @@ func (v *DecoderValues) Next() bool {
 	}
 	currentValue := values[i]
 
-	v.valueBegin = currentValue.valueBegin
-	v.valueEnd   = currentValue.valueEnd
+	v.valueBegin    = currentValue.valueBegin
+	v.valueEnd      = currentValue.valueEnd
+	v.valueUnquoted = currentValue.valueUnquoted
 
 	return true
 }
@@ -92,6 +94,15 @@ func (v DecoderValues) ValueString() (string, error) {
 	}
 
 	return string(p), nil
+}
+
+
+func (v DecoderValues) UnquotedValueString() (string, error) {
+	if !v.hasBegun {
+		return "", errPremature
+	}
+
+	return v.valueUnquoted, nil
 }
 
 

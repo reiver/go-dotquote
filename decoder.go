@@ -59,8 +59,9 @@ type Decoder struct {
 	keyEnd   int
 
 	values []struct{
-		valueBegin int
-		valueEnd   int
+		valueBegin    int
+		valueEnd      int
+		valueUnquoted string
 	}
 }
 
@@ -195,12 +196,20 @@ func (decoder *Decoder) Next() bool {
 				return false
 			}
 
+			valueUnquoted, err := detectValues.UnquoteString()
+			if nil != err {
+				decoder.err = err
+				return false
+			}
+
 			value := struct{
-				valueBegin int
-				valueEnd   int
+				valueBegin    int
+				valueEnd      int
+				valueUnquoted string
 			}{
 				valueBegin: index+begin,
 				valueEnd:   index+end,
+				valueUnquoted: valueUnquoted,
 			}
 
 			decoder.values = append(decoder.values, value)
