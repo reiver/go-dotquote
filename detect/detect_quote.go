@@ -8,6 +8,8 @@ import (
 )
 
 
+// DetectQuote looks for a dotquote quote in the dotquote data in a []byte, and returns
+// the beginning index and the ending index.
 func DetectQuote(b []byte) (int, int, error) {
 	if nil == b {
 		return -1, -1, errNilBytes
