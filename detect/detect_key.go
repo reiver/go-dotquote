@@ -16,7 +16,7 @@ var (
 // DetectKey looks for a dotquote key in the dotquote data in a []byte, and returns
 // the beginning index and the ending index.
 //
-// The returned beginning index and ending indexes are the values one would need
+// The returned beginning index and ending index are the values one would need
 // to take a slice of the []byte, and get just that key.
 //
 // For example:
