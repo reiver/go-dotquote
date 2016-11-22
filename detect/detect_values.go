@@ -4,6 +4,7 @@ package dotquotedetect
 import (
 	"github.com/reiver/go-whitespace"
 
+	"bytes"
 	"unicode/utf8"
 )
 
@@ -37,6 +38,7 @@ type DetectValues struct {
 	detectedBegin int
 	detectedEnd   int
 	detectedErr   error
+	unquoted      bytes.Buffer
 
 	hasBegun bool
 	isSingular bool
@@ -72,7 +74,8 @@ func (v *DetectValues) detect() bool {
 		return false
 	}
 
-	v.detectedBegin, v.detectedEnd, v.detectedErr = DetectQuote(v.p)
+	v.unquoted.Reset()
+	v.detectedBegin, v.detectedEnd, v.detectedErr = DetectQuoteAndUnquote(&v.unquoted, v.p)
 	if nil != v.detectedErr {
 		v.err = v.detectedErr
 		return false
@@ -113,6 +116,47 @@ func (v *DetectValues) Detect() (int, int, error) {
 	return v.detectedBegin, v.detectedEnd, v.detectedErr
 }
 
+
+// MustUnquoteBytes is like UnquoteBytes, expect it panic()s if there is an error.
+func (v DetectValues) MustUnquoteBytes() []byte {
+	p, err := v.UnquoteBytes()
+	if nil != err {
+		panic(err)
+	}
+
+	return p
+}
+
+func (v DetectValues) UnquoteBytes() ([]byte, error) {
+	if err := v.detectedErr; nil != err {
+		return nil, err
+	}
+
+	p := append([]byte(nil), v.unquoted.Bytes()...)
+
+	return p, nil
+}
+
+
+// MustUnquoteString is like UnquoteString, expect it panic()s if there is an error.
+func (v DetectValues) MustUnquoteString() string {
+	s, err := v.UnquoteString()
+	if nil != err {
+		panic(err)
+	}
+
+	return s
+}
+
+func (v DetectValues) UnquoteString() (string, error) {
+	if err := v.detectedErr; nil != err {
+		return "", err
+	}
+
+	s := v.unquoted.String()
+
+	return s, nil
+}
 
 func (v DetectValues) Err() error {
 	return v.err
