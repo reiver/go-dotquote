@@ -534,7 +534,7 @@ func TestDetectQuote(t *testing.T) {
 		{
 			var buffer bytes.Buffer
 
-			actualDADBegin, actualDADEnd, err := DetectAndUnquoteQuote( &buffer, []byte(test.Bytes) )
+			actualDADBegin, actualDADEnd, err := DetectQuoteAndUnquote( &buffer, []byte(test.Bytes) )
 			if nil != err {
 				t.Errorf("For test #%d, did not expect an error, but actually got one: (%T) %v", testNumber, err, err)
 				continue

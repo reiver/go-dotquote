@@ -38,12 +38,12 @@ func MustDetectQuote(b []byte) (int, int) {
 //	
 //	quote := p[b:e]
 func DetectQuote(b []byte) (int, int, error) {
-	return DetectAndUnquoteQuote(ioutil.Discard, b)
+	return DetectQuoteAndUnquote(ioutil.Discard, b)
 }
 
-// DetectAndUnquoteQuote is like DetectQuote, expect it also writes the quoted version of the quote
+// DetectQuoteAndUnquote is like DetectQuote, expect it also writes the quoted version of the quote
 // to the io.Writer.
-func DetectAndUnquoteQuote(w io.Writer, b []byte) (int, int, error) {
+func DetectQuoteAndUnquote(w io.Writer, b []byte) (int, int, error) {
 	if nil == b {
 		return -1, -1, errNilBytes
 	}
