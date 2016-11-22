@@ -8,6 +8,42 @@ import (
 )
 
 
+// Decoder
+//
+// Example usage:
+//
+//	decoder := Decoder{
+//		Bytes: p,
+//	}
+//	
+//	for decoder.Next() {
+//		keyBegin, keyEnd, err := decoder.Key()
+//		if nil != err {
+//			return err
+//		}
+//	
+//		key := p[keyBegin:keyEnd]
+//	
+//		//@TODO: do something with the key
+//	
+//		values := decoder.Values()
+//		for values.Next() {
+//			valueBegin, valueEnd, err := values.Value()
+//			if nil != err {
+//				return err
+//			}
+//	
+//			value := p[valueBegin:valueEnd]
+//	
+//			/?@TOD: do something with the value.
+//		}
+//		if err := values.Err(); nil != err {
+//			return err
+//		}
+//	}
+//	if err := decoder.Err(); nil != err {
+//		return nil
+//	}
 type Decoder struct {
 	Bytes []byte
 	Logger Logger
