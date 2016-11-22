@@ -3,6 +3,8 @@ package dotquotedetect
 
 import (
 	"github.com/reiver/go-whitespace"
+
+	"unicode/utf8"
 )
 
 
@@ -41,7 +43,7 @@ type DetectValues struct {
 
 	p []byte
 	index int
-	p0 byte
+	r0 rune
 }
 
 func (v *DetectValues) pslice(n int) error {
@@ -55,7 +57,11 @@ func (v *DetectValues) pslice(n int) error {
 	if 0 >= len(v.p) {
 		return nil
 	}
-	v.p0 = v.p[0]
+
+	v.r0, _ = utf8.DecodeRune(v.p)
+	if utf8.RuneError == v.r0 {
+		return errNotUTF8
+	}
 
 	return nil
 }
@@ -126,7 +132,7 @@ func (v *DetectValues) Next() bool {
 		return false
 	}
 
-	if ',' == v.p0 {
+	if ',' == v.r0 {
 		if err := v.pslice(1); nil != err {
 			v.err = errInternalError
 			return false
@@ -139,7 +145,7 @@ func (v *DetectValues) Next() bool {
 	}
 
 
-	if ']' == v.p0 {
+	if ']' == v.r0 {
 		if err := v.pslice(1); nil != err {
 			v.err = errInternalError
 			return false
@@ -170,14 +176,19 @@ func (v *DetectValues) init() bool {
 
 	v.p = v.Bytes
 
-	v.p0 = v.p[0]
+	v.r0, _ = utf8.DecodeRune(v.p)
+	if utf8.RuneError == v.r0 {
+		v.err = errNotUTF8
+		return false
+	}
+
 
 	if err := v.eatWhitespace(); nil != err {
 		v.err = err
 		return false
 	}
 
-	switch v.p0 {
+	switch v.r0 {
 	case '"':
 		v.isSingular = true
 
@@ -200,7 +211,7 @@ func (v *DetectValues) init() bool {
 			return false
 		}
 
-		if ']' == v.p0 {
+		if ']' == v.r0 {
 			if err := v.pslice(1); nil != err {
 				v.err = errInternalError
 				return false
@@ -231,7 +242,7 @@ func (v DetectValues) EndIndex() int {
 
 func (v *DetectValues) eatWhitespace() error {
 
-	for whitespace.IsWhitespace(rune(v.p0)) {
+	for whitespace.IsWhitespace(v.r0) {
 		if err := v.pslice(1); nil != err { // <--- we expect to be in the ASCII range, so 1 byte is correct.
 			v.err = errInternalError
 			return v.err
