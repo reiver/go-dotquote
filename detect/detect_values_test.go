@@ -9,14 +9,18 @@ import (
 func TestDetectValues(t *testing.T) {
 
 	tests := []struct{
-		Bytes          []byte
-		ExpectedEndIndex int
-		ExpectedValues []string
+		Bytes                  []byte
+		ExpectedEndIndex         int
+		ExpectedValues         []string
+		ExpectedUnquotedValues []string
 	}{
 		{
 			Bytes:  []byte(`[]`),
 			ExpectedEndIndex: 2,
 			ExpectedValues: []string{
+				// Nothing here.
+			},
+			ExpectedUnquotedValues: []string{
 				// Nothing here.
 			},
 		},
@@ -29,11 +33,17 @@ func TestDetectValues(t *testing.T) {
 			ExpectedValues: []string{
 				// Nothing here.
 			},
+			ExpectedUnquotedValues: []string{
+				// Nothing here.
+			},
 		},
 		{
 			Bytes:  []byte(`[ ]`),
 			ExpectedEndIndex:  3,
 			ExpectedValues: []string{
+				// Nothing here.
+			},
+			ExpectedUnquotedValues: []string{
 				// Nothing here.
 			},
 		},
@@ -43,11 +53,17 @@ func TestDetectValues(t *testing.T) {
 			ExpectedValues: []string{
 				// Nothing here.
 			},
+			ExpectedUnquotedValues: []string{
+				// Nothing here.
+			},
 		},
 		{
 			Bytes:  []byte(` [ ]`),
 			ExpectedEndIndex:   4,
 			ExpectedValues: []string{
+				// Nothing here.
+			},
+			ExpectedUnquotedValues: []string{
 				// Nothing here.
 			},
 		},
@@ -57,6 +73,9 @@ func TestDetectValues(t *testing.T) {
 			ExpectedValues: []string{
 				// Nothing here.
 			},
+			ExpectedUnquotedValues: []string{
+				// Nothing here.
+			},
 		},
 		{
 			Bytes:  []byte(`[ ] `),
@@ -64,11 +83,17 @@ func TestDetectValues(t *testing.T) {
 			ExpectedValues: []string{
 				// Nothing here.
 			},
+			ExpectedUnquotedValues: []string{
+				// Nothing here.
+			},
 		},
 		{
 			Bytes:  []byte(` [ ] `),
 			ExpectedEndIndex:   4,
 			ExpectedValues: []string{
+				// Nothing here.
+			},
+			ExpectedUnquotedValues: []string{
 				// Nothing here.
 			},
 		},
@@ -81,6 +106,9 @@ func TestDetectValues(t *testing.T) {
 			ExpectedValues: []string{
 				// Nothing here.
 			},
+			ExpectedUnquotedValues: []string{
+				// Nothing here.
+			},
 		},
 
 
@@ -90,6 +118,9 @@ func TestDetectValues(t *testing.T) {
 			ExpectedEndIndex:      7,
 			ExpectedValues: []string{
 				`"apple"`,
+			},
+			ExpectedUnquotedValues: []string{
+				`apple`,
 			},
 		},
 
@@ -101,6 +132,9 @@ func TestDetectValues(t *testing.T) {
 			ExpectedValues: []string{
 				`"apple"`,
 			},
+			ExpectedUnquotedValues: []string{
+				`apple`,
+			},
 		},
 		{
 			Bytes:  []byte(`"apple" `),
@@ -108,12 +142,18 @@ func TestDetectValues(t *testing.T) {
 			ExpectedValues: []string{
 				`"apple"`,
 			},
+			ExpectedUnquotedValues: []string{
+				`apple`,
+			},
 		},
 		{
 			Bytes:  []byte(` "apple" `),
 			ExpectedEndIndex:       8,
 			ExpectedValues: []string{
 				`"apple"`,
+			},
+			ExpectedUnquotedValues: []string{
+				`apple`,
 			},
 		},
 
@@ -125,6 +165,9 @@ func TestDetectValues(t *testing.T) {
 			ExpectedValues: []string{
 				`"apple"`,
 			},
+			ExpectedUnquotedValues: []string{
+				`apple`,
+			},
 		},
 
 
@@ -135,12 +178,18 @@ func TestDetectValues(t *testing.T) {
 			ExpectedValues: []string{
 				`"apple"`,
 			},
+			ExpectedUnquotedValues: []string{
+				`apple`,
+			},
 		},
 		{
 			Bytes:  []byte(`[ "apple"]`),
 			ExpectedEndIndex:         10,
 			ExpectedValues: []string{
 				`"apple"`,
+			},
+			ExpectedUnquotedValues: []string{
+				`apple`,
 			},
 		},
 		{
@@ -149,12 +198,18 @@ func TestDetectValues(t *testing.T) {
 			ExpectedValues: []string{
 				`"apple"`,
 			},
+			ExpectedUnquotedValues: []string{
+				`apple`,
+			},
 		},
 		{
 			Bytes:  []byte(`["apple"] `),
 			ExpectedEndIndex:        9,
 			ExpectedValues: []string{
 				`"apple"`,
+			},
+			ExpectedUnquotedValues: []string{
+				`apple`,
 			},
 		},
 
@@ -166,6 +221,9 @@ func TestDetectValues(t *testing.T) {
 			ExpectedValues: []string{
 				`"apple"`,
 			},
+			ExpectedUnquotedValues: []string{
+				`apple`,
+			},
 		},
 		{
 			Bytes:  []byte(` ["apple" ]`),
@@ -173,12 +231,18 @@ func TestDetectValues(t *testing.T) {
 			ExpectedValues: []string{
 				`"apple"`,
 			},
+			ExpectedUnquotedValues: []string{
+				`apple`,
+			},
 		},
 		{
 			Bytes:  []byte(` ["apple"] `),
 			ExpectedEndIndex:         10,
 			ExpectedValues: []string{
 				`"apple"`,
+			},
+			ExpectedUnquotedValues: []string{
+				`apple`,
 			},
 		},
 
@@ -190,12 +254,18 @@ func TestDetectValues(t *testing.T) {
 			ExpectedValues: []string{
 				`"apple"`,
 			},
+			ExpectedUnquotedValues: []string{
+				`apple`,
+			},
 		},
 		{
 			Bytes:  []byte(`[ "apple"] `),
 			ExpectedEndIndex:         10,
 			ExpectedValues: []string{
 				`"apple"`,
+			},
+			ExpectedUnquotedValues: []string{
+				`apple`,
 			},
 		},
 
@@ -206,6 +276,9 @@ func TestDetectValues(t *testing.T) {
 			ExpectedEndIndex:         10,
 			ExpectedValues: []string{
 				`"apple"`,
+			},
+			ExpectedUnquotedValues: []string{
+				`apple`,
 			},
 		},
 
@@ -217,12 +290,18 @@ func TestDetectValues(t *testing.T) {
 			ExpectedValues: []string{
 				`"apple"`,
 			},
+			ExpectedUnquotedValues: []string{
+				`apple`,
+			},
 		},
 		{
 			Bytes:  []byte(` [ "apple"] `),
 			ExpectedEndIndex:          11,
 			ExpectedValues: []string{
 				`"apple"`,
+			},
+			ExpectedUnquotedValues: []string{
+				`apple`,
 			},
 		},
 		{
@@ -231,12 +310,18 @@ func TestDetectValues(t *testing.T) {
 			ExpectedValues: []string{
 				`"apple"`,
 			},
+			ExpectedUnquotedValues: []string{
+				`apple`,
+			},
 		},
 		{
 			Bytes:  []byte(`["apple" ] `),
 			ExpectedEndIndex:         10,
 			ExpectedValues: []string{
 				`"apple"`,
+			},
+			ExpectedUnquotedValues: []string{
+				`apple`,
 			},
 		},
 
@@ -249,6 +334,10 @@ func TestDetectValues(t *testing.T) {
 				`"apple"`,
 				`"banana"`,
 			},
+			ExpectedUnquotedValues: []string{
+				`apple`,
+				`banana`,
+			},
 		},
 		{
 			Bytes:  []byte(`["apple", "banana"]`),
@@ -257,6 +346,10 @@ func TestDetectValues(t *testing.T) {
 				`"apple"`,
 				`"banana"`,
 			},
+			ExpectedUnquotedValues: []string{
+				`apple`,
+				`banana`,
+			},
 		},
 		{
 			Bytes:  []byte(`["apple" ,"banana"]`),
@@ -264,6 +357,10 @@ func TestDetectValues(t *testing.T) {
 			ExpectedValues: []string{
 				`"apple"`,
 				`"banana"`,
+			},
+			ExpectedUnquotedValues: []string{
+				`apple`,
+				`banana`,
 			},
 		},
 
@@ -277,6 +374,11 @@ func TestDetectValues(t *testing.T) {
 				`"banana"`,
 				`"cherry"`,
 			},
+			ExpectedUnquotedValues: []string{
+				`apple`,
+				`banana`,
+				`cherry`,
+			},
 		},
 		{
 			Bytes:  []byte(`["apple", "banana","cherry"]`),
@@ -285,6 +387,11 @@ func TestDetectValues(t *testing.T) {
 				`"apple"`,
 				`"banana"`,
 				`"cherry"`,
+			},
+			ExpectedUnquotedValues: []string{
+				`apple`,
+				`banana`,
+				`cherry`,
 			},
 		},
 		{
@@ -295,6 +402,11 @@ func TestDetectValues(t *testing.T) {
 				`"banana"`,
 				`"cherry"`,
 			},
+			ExpectedUnquotedValues: []string{
+				`apple`,
+				`banana`,
+				`cherry`,
+			},
 		},
 		{
 			Bytes:  []byte(`["apple","banana", "cherry"]`),
@@ -303,6 +415,11 @@ func TestDetectValues(t *testing.T) {
 				`"apple"`,
 				`"banana"`,
 				`"cherry"`,
+			},
+			ExpectedUnquotedValues: []string{
+				`apple`,
+				`banana`,
+				`cherry`,
 			},
 		},
 		{
@@ -313,6 +430,11 @@ func TestDetectValues(t *testing.T) {
 				`"banana"`,
 				`"cherry"`,
 			},
+			ExpectedUnquotedValues: []string{
+				`apple`,
+				`banana`,
+				`cherry`,
+			},
 		},
 		{
 			Bytes:  []byte(`["apple", "banana", "cherry"]`),
@@ -321,6 +443,11 @@ func TestDetectValues(t *testing.T) {
 				`"apple"`,
 				`"banana"`,
 				`"cherry"`,
+			},
+			ExpectedUnquotedValues: []string{
+				`apple`,
+				`banana`,
+				`cherry`,
 			},
 		},
 		{
@@ -331,6 +458,11 @@ func TestDetectValues(t *testing.T) {
 				`"banana"`,
 				`"cherry"`,
 			},
+			ExpectedUnquotedValues: []string{
+				`apple`,
+				`banana`,
+				`cherry`,
+			},
 		},
 		{
 			Bytes:  []byte(`["apple", "banana" ,"cherry"]`),
@@ -340,6 +472,11 @@ func TestDetectValues(t *testing.T) {
 				`"banana"`,
 				`"cherry"`,
 			},
+			ExpectedUnquotedValues: []string{
+				`apple`,
+				`banana`,
+				`cherry`,
+			},
 		},
 		{
 			Bytes:  []byte(`["apple" ,"banana", "cherry"]`),
@@ -348,6 +485,11 @@ func TestDetectValues(t *testing.T) {
 				`"apple"`,
 				`"banana"`,
 				`"cherry"`,
+			},
+			ExpectedUnquotedValues: []string{
+				`apple`,
+				`banana`,
+				`cherry`,
 			},
 		},
 
@@ -361,6 +503,11 @@ func TestDetectValues(t *testing.T) {
 				`"two"`,
 				`"three"`,
 			},
+			ExpectedUnquotedValues: []string{
+				`one`,
+				`two`,
+				`three`,
+			},
 		},
 
 
@@ -372,6 +519,28 @@ func TestDetectValues(t *testing.T) {
 				`"one"`,
 				`"two"`,
 				`"three"`,
+			},
+			ExpectedUnquotedValues: []string{
+				`one`,
+				`two`,
+				`three`,
+			},
+		},
+
+
+
+		{
+			Bytes:  []byte(`  [  "one\ttwo\tthree"  ,  "two"  ,  "three"  ]  "apple"  .  "banana"  .  "cherry"  =  "something"  `),
+			ExpectedEndIndex:                                              47,
+			ExpectedValues: []string{
+				`"one\ttwo\tthree"`,
+				`"two"`,
+				`"three"`,
+			},
+			ExpectedUnquotedValues: []string{
+				`one	two	three`,
+				`two`,
+				`three`,
 			},
 		},
 	}
@@ -385,6 +554,7 @@ func TestDetectValues(t *testing.T) {
 
 
 		actualValues := []string{}
+		actualUnquotedValues := []string{}
 		for iterator.Next() {
 			b, e, err := iterator.Detect()
 			if nil != err {
@@ -396,6 +566,15 @@ func TestDetectValues(t *testing.T) {
 			s := string(value)
 
 			actualValues = append(actualValues, s)
+
+
+
+			unquotedValue, err := iterator.UnquoteString()
+			if nil != err {
+				t.Errorf("For test #%d, did not expect an error, but actually got one: (%T) %v", testNumber, err, err)
+				continue TestLoop
+			}
+			actualUnquotedValues = append(actualUnquotedValues, unquotedValue)
 		}
 		if err := iterator.Err(); nil != err {
 			t.Errorf("For test #%d, did not expect an error, but actually got one: (%T) %v", testNumber, err, err)
@@ -423,6 +602,22 @@ func TestDetectValues(t *testing.T) {
 
 			if expected, actual := expectedValue, actualValue; expected != actual {
 				t.Errorf("For test #%d and value #%d, expected {%s}, but actually got {%s}.", testNumber, valueNumber, expected, actual)
+				continue
+			}
+		}
+
+		if expected, actual := len(test.ExpectedUnquotedValues), len(actualUnquotedValues); expected != actual {
+			t.Errorf("For test #%d, expected %d values, but actually got %d values.", testNumber, expected, actual)
+			t.Errorf("EXPECTED: %#v", test.ExpectedUnquotedValues)
+			t.Errorf("ACTUAL:   %#v", actualUnquotedValues)
+			t.Errorf("ORIGINAL: %s", string(test.Bytes))
+			continue
+		}
+		for valueUnquotedNumber, expectedUnquotedValue := range test.ExpectedUnquotedValues {
+			actualUnquotedValue := actualUnquotedValues[valueUnquotedNumber]
+
+			if expected, actual := expectedUnquotedValue, actualUnquotedValue; expected != actual {
+				t.Errorf("For test #%d and value #%d, expected {%s}, but actually got {%s}.", testNumber, valueUnquotedNumber, expected, actual)
 				continue
 			}
 		}
