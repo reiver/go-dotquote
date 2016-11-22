@@ -180,6 +180,7 @@ func (decoder *Decoder) Next() bool {
 
 
 
+	decoder.values = nil
 	{
 		index := decoder.index
 
