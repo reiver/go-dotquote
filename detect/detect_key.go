@@ -15,6 +15,18 @@ var (
 
 // DetectKey looks for a dotquote key in the dotquote data in a []byte, and returns
 // the beginning index and the ending index.
+//
+// The returned beginning index and ending indexes are the values one would need
+// to take a slice of the []byte, and get just that key.
+//
+// For example:
+//
+//	b, e, err :+ dotquotedetect.DetectKey(p)
+//	if nil != err {
+//		return err
+//	}
+//	
+//	key := p[b:e]
 func DetectKey(b []byte) (int, int, error) {
 	if nil == b {
 		return -1, -1, errNilBytes
