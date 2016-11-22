@@ -5,6 +5,7 @@ import (
 	"github.com/reiver/go-inquote"
 
 	"io"
+	"unicode/utf8"
 )
 
 
@@ -33,25 +34,33 @@ func DetectQuote(b []byte) (int, int, error) {
 		return -1, -1, errBadRequest
 	}
 
-	b0 := b[0]
+	r0, size := utf8.DecodeRune(b)
+	if utf8.RuneError == r0 {
+		return -1, -1, errNotUTF8
+	}
 
-	if '"' != b0 {
+
+	if '"' != r0 {
 		return -1, -1, newNotQuoteComplainer(string(b))
 	}
 
 	const begin = 0
-	end := 1 + begin
+	end := size + begin
 
-	p:= b[1:]
+	p:= b[size:]
 
 	for {
 		if 0 >= len(p) {
 			return -1, -1, errBadRequest
 		}
 
-		p0 := p[0]
-		if '"' == p0 {
-			end++
+		r0, size := utf8.DecodeRune(p)
+		if utf8.RuneError == r0 {
+			return -1, -1, errNotUTF8
+		}
+
+		if '"' == r0 {
+			end += size
 			break
 		}
 
