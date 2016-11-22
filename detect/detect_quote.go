@@ -16,7 +16,7 @@ import (
 //
 // For example:
 //
-//	b, e, err :+ dotquotedetect.DetectQuote(p)
+//	b, e, err := dotquotedetect.DetectQuote(p)
 //	if nil != err {
 //		return err
 //	}

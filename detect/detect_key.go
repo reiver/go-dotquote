@@ -21,7 +21,7 @@ var (
 //
 // For example:
 //
-//	b, e, err :+ dotquotedetect.DetectKey(p)
+//	b, e, err := dotquotedetect.DetectKey(p)
 //	if nil != err {
 //		return err
 //	}
